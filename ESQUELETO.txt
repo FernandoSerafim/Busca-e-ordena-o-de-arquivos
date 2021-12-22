@@ -1,0 +1,66 @@
+FUNÇÃO QUE VERIFICA ÍNDICES DESATUALIZADOS:
+
+	- APARENTEMENTE, SE OS ÍNDICES NÃO POSSUÍREM CONTEÚDO, MANDAMOS SOMENTE A STRUCT
+	- QUANDO OS ÍNDICES JÁ POSSUEM O CONTEÚDO, CARREGAMOS ESSE CONTEÚDO, E ENTÃO, CRIAMOS
+	MAIS UM ÍNDICE NO VETOR PARA ADICIONAR A NOVA STRUCT.
+
+	- Inseridos os registros no arquivo principal, atualizamos tanto
+	o índice primário quanto a lista invertida instantaneamente?
+	R: Sim, mas em memória principal, pois se for em disco, seria lento demais
+	pois os dados devem ser mntidos ordenados. Por isso a questão da flag.
+	Não faz sentido ordenar um índice quando for usar, porque,
+	por definição, ele já é uma estrutura ordenada. Por isso trabalhar 
+	em memóriadurante a execução, já inserindo ordenado (mantendo
+	ordenado) e atualizando apenas no final, ok? Não tem sentido
+	ficar atualizando a todo instante, ok?
+
+	- Existe uma flag no cabeçalho que faz o controle 
+	- Quando você abrir a aplicação, você deve checar a flag
+	- Se a flag estiver atualizada, você carrega os índices para a memória. Se estiver desatualizada, você deve recriar os
+	índices para depois manipulá-los na memória. Ai você trabalha normalmente tudo em memória. 
+	- Quando for fechar a aplicação, deve ser verificado se os índices em memória sofreram alguma alteração. 
+	em caso afirmativo você precisa atualizá-los. Caso contrário, apenas fechar
+
+	- Colocaremos um header que indica 'S' para atualizado ou 'N' para desatualizado
+	- Toda vez que fecha, vr
+	- O keysortin terá influência direta nessa parte
+	- A NÃO SER QUE QUANDO REALIZAMOS A INSERÇÃO, OS ÍNDICES SÃO CRIADOS NOS VETORES
+	- ASSIM, TERÍAMOS DOIS VETORES QUE SÓ SÃO DESCARREGADOS NOS ARQUIVOS ÍNDICES QUANDO A EXECUÇÃO SE ENCERRA (sim, exatamente isso)
+
+NA FUNÇÃO DE INSERÇÃO:
+	GERAL:
+	- VERIFICAR SE CHEGOU NO FIM DO ARQUIVO INSERE.BIN
+	- ADICIONAR O "MÓDULO DE PROTEÇÃO" 
+	- DIRECIONAR O PONTEIRO 
+
+	ÍNDICE PRIMÁRIO:
+	- Inserir as chaves primárias e o Byte offset do registro no arquivo principal
+	- Com o módulo de proteção, provavelmente haverá um header no começo desses arquivos, portanto, poderão ocorrer mudanças na estrutura do projeto
+
+	ÍNDICE SECUNDÁRIO:
+	- LIP1 -> Inserir nome do filme e BOS
+	- LIP2 -> inserir chave primária e BOS
+	- Com o módulo de proteção, provavelmente haverá um header no começo desses arquivos, portanto, poderão ocorrer mudanças na estrutura do projeto
+
+FUNÇÃO BUSCA POR ÍNDICE PRIMÁRIO:
+	- DIRECIONAR O PONTEIRO
+	- O arquivo de índice primário pode ser usado como direcionador do ponteiro	
+	- Decidir se realiza ordenação ou não
+	- Verificar a chave do cliente, mover até o BOS no arquivo principal e exibir o registro
+	- Verificar existência da chave
+	- Exibir todos os dados do cliente
+	- Deve existir um header que possua o status "S/N", que corresponde se o índice está atualizado ou não
+
+FUNÇÃO BUSCA POR ÍNDICE SECUNDÁRIO:
+	- DIRECIONAR O PONTEIRO -> Os índices podem ser usados como direcionadores dos ponteiros
+	- Decidir como vai usar o vetor para trabalhar em memória principal
+	- Verificar o nome do filme, verificar todos os clientes que assistiram o filme e exibir esses registros
+	- Verificar se o nome do filme existe
+	- Verificar se ninguém assistiu ao filme
+	- Ou existem clientes que assistiram a esse filme ou não
+
+DESCRIÇÃO:
+	- Precisamos decidir qual algoritmo de ordenação usar
+	- Notadamente, para organizar o índice primário, o algoritmo terá um tipo de implementação
+	- Para organizar o índice secundário, o algoritmo terá outro tipo de implementação ---> Ou não
+	- Se eu for ordenar a lista invertida com base nas chaves primárias, devo ajustas os Byte offset's da minha lista dinâmica
