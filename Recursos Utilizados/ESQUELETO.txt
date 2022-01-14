@@ -1,5 +1,21 @@
 FUNÇÃO QUE VERIFICA ÍNDICES DESATUALIZADOS:
 
+	-Se o erro do arquivo auxiliar peristir muito, utilizar ponteiros é uma solução
+
+	- E se eu mover Size_Structs sempre pro final e fazer uma escrita para que nunca necessite alteranar o modo
+	na função de inserção? É preciso muito cuidado para implementar isso...
+	-OBS: Pra que ficar com os arquivos abertos se eu posso abri-los somente para carregar ou descarregar?
+	- O tamanho do LIP2 é igual ao do índice primário
+	-A Atualização de S --> N ocorre no Carrega_indices()
+	- Quando não inseri nada ainda, a alocação de memória ocorre na função de inserção!
+	- Por decisão, vou criar um arquivo auxiliar com os tamanhos e deletar ele ao fim da aplicação, já que seria redundante ter o tamanho nele
+	e também nos índices primário e secundário.
+	- Preciso dar um jeito de guardar os ponteiros de tamanho das structs
+	-Uma solução é guardar os tamanhos em um arquivo auxiliar -> sequência[índice_primário/LIP2; LIP1]
+	- Outra é guardar em ponteiros. Isso poului mais as funções, porém, quando os índices estão atualizados, teremos o tamanho certo das structs
+	- Para dimensionarmos os vetores das structs, devemos, necessariamente, enviar o tamanho como parâmetro, caso contrário, não tem como
+	- Colocaremos um header que indica 'S' para atualizado ou 'N' para desatualizado
+	- Por decisão de projeto, irei deixar o header apenas no índice primário (Não há necessidade de deixar na Lista invertida também)
 	- APARENTEMENTE, SE OS ÍNDICES NÃO POSSUÍREM CONTEÚDO, MANDAMOS SOMENTE A STRUCT
 	- QUANDO OS ÍNDICES JÁ POSSUEM O CONTEÚDO, CARREGAMOS ESSE CONTEÚDO, E ENTÃO, CRIAMOS
 	MAIS UM ÍNDICE NO VETOR PARA ADICIONAR A NOVA STRUCT.
@@ -7,12 +23,12 @@ FUNÇÃO QUE VERIFICA ÍNDICES DESATUALIZADOS:
 	- Inseridos os registros no arquivo principal, atualizamos tanto
 	o índice primário quanto a lista invertida instantaneamente?
 	R: Sim, mas em memória principal, pois se for em disco, seria lento demais
-	pois os dados devem ser mntidos ordenados. Por isso a questão da flag.
+	pois os dados devem ser mantidos ordenados. Por isso a questão da flag.
 	Não faz sentido ordenar um índice quando for usar, porque,
 	por definição, ele já é uma estrutura ordenada. Por isso trabalhar 
-	em memóriadurante a execução, já inserindo ordenado (mantendo
+	em memória durante a execução, já inserindo ordenado (mantendo
 	ordenado) e atualizando apenas no final, ok? Não tem sentido
-	ficar atualizando a todo instante, ok?
+	ficar atualizando a todo instante.
 
 	- Existe uma flag no cabeçalho que faz o controle 
 	- Quando você abrir a aplicação, você deve checar a flag
@@ -21,7 +37,6 @@ FUNÇÃO QUE VERIFICA ÍNDICES DESATUALIZADOS:
 	- Quando for fechar a aplicação, deve ser verificado se os índices em memória sofreram alguma alteração. 
 	em caso afirmativo você precisa atualizá-los. Caso contrário, apenas fechar
 
-	- Colocaremos um header que indica 'S' para atualizado ou 'N' para desatualizado
 	- Toda vez que fecha, vr
 	- O keysortin terá influência direta nessa parte
 	- A NÃO SER QUE QUANDO REALIZAMOS A INSERÇÃO, OS ÍNDICES SÃO CRIADOS NOS VETORES
@@ -35,15 +50,20 @@ NA FUNÇÃO DE INSERÇÃO:
 
 	ÍNDICE PRIMÁRIO:
 	- Inserir as chaves primárias e o Byte offset do registro no arquivo principal
-	- Com o módulo de proteção, provavelmente haverá um header no começo desses arquivos, portanto, poderão ocorrer mudanças na estrutura do projeto
+	- Com o módulo de proteção, provavelmente haverá um header no começo desses arquivos, portanto, poderão ocorrer mudanças na estrutura do 
+	projeto
 
 	ÍNDICE SECUNDÁRIO:
 	- LIP1 -> Inserir nome do filme e BOS
 	- LIP2 -> inserir chave primária e BOS
-	- Com o módulo de proteção, provavelmente haverá um header no começo desses arquivos, portanto, poderão ocorrer mudanças na estrutura do projeto
+	- Com o módulo de proteção, provavelmente haverá um header no começo desses arquivos, portanto, poderão ocorrer mudanças na estrutura do 
+	projeto
+
+OBS: A BUSCA PODE SER SEQUENCIAL OU BINÁRIA. A BUSCA BINÁRIA, É OPCIONAL, INCLUSIVE
 
 FUNÇÃO BUSCA POR ÍNDICE PRIMÁRIO:
 	- DIRECIONAR O PONTEIRO
+	- PRECISO CRIAR UM ARQUIVO AUXILIAR QUE INDICA ONDE O ARQUIVO busca_p PAROU
 	- O arquivo de índice primário pode ser usado como direcionador do ponteiro	
 	- Decidir se realiza ordenação ou não
 	- Verificar a chave do cliente, mover até o BOS no arquivo principal e exibir o registro
@@ -60,7 +80,8 @@ FUNÇÃO BUSCA POR ÍNDICE SECUNDÁRIO:
 	- Ou existem clientes que assistiram a esse filme ou não
 
 DESCRIÇÃO:
-	- Precisamos decidir qual algoritmo de ordenação usar
+	- O algoritmo de ordenação utilizado é o Heapsort
 	- Notadamente, para organizar o índice primário, o algoritmo terá um tipo de implementação
 	- Para organizar o índice secundário, o algoritmo terá outro tipo de implementação ---> Ou não
-	- Se eu for ordenar a lista invertida com base nas chaves primárias, devo ajustas os Byte offset's da minha lista dinâmica
+	- Se eu for ordenar a lista invertida com base nas chaves primárias, devo ajustas os Byte offset's 
+	da minha lista dinâmica
